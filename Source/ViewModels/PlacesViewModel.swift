@@ -13,7 +13,7 @@ class PlacesViewModel: ObservableObject {
     
     @Published var searchTerm: String = ""
     @Published var searchLocation: CLLocationCoordinate2D = MapDetails.defaultCenter
-    @Published var searchRadius: Double = MapDetails.defaultRadiusValue
+    @Published var searchRadius: Double?
     
     @Published private(set) var isSearching = false
     @Published var shouldShowBanner = false
@@ -21,17 +21,14 @@ class PlacesViewModel: ObservableObject {
 
     @Published private(set) var places: [Place] = []
 
-    fileprivate let coffeeCategories = {
-        return [13032, 13033, 13034, 13015, 13036, 11126, 13063, 17063, 11125, 12021]
-            .map { PlaceCategory(id: Int64($0), name: "")}
-    }()
-        
     func searchForPlaces() async {
         let locationCoordinates = Coordinates(with: searchLocation)
+        let categories = PlaceSearchRequestParameters.coffeeCategoriesList()
+
         let requestParameters = PlaceSearchRequestParameters(searchKey: searchTerm,
                                                              initialCoordinates: locationCoordinates,
-                                                             radius: Int(searchRadius),
-                                                             categories: coffeeCategories,
+                                                             radius: Int(searchRadius ?? MapDetails.defaultRadiusValue),
+                                                             categories: categories,
                                                              limit: 100)
         let placeSearchRequest = PlaceSearchRequest(parameters: requestParameters)
         isSearching = true

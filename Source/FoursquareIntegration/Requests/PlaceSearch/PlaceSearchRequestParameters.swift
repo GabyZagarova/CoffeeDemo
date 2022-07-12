@@ -54,3 +54,11 @@ struct PlaceSearchRequestParameters: Codable {
         try container.encode(limit, forKey: .limit)
     }
 }
+
+extension PlaceSearchRequestParameters {
+    
+    static func coffeeCategoriesList() -> [PlaceCategory] {
+        return [13032, 13033, 13034, 13015, 13036, 11126, 13063, 17063, 11125, 12021]
+            .map { PlaceCategory(id: Int64($0), name: "Coffee places")}
+    }
+}
