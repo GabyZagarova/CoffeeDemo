@@ -10,5 +10,5 @@ import Foundation
 public enum NetworkingResponse<T> where T: Decodable {
     
     case success(result: T)
-    case failure(error: NetworkingError?)
+    case failure(error: NetworkingError)
 }
