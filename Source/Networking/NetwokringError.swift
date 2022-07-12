@@ -7,7 +7,7 @@
 
 import Foundation
 
-typealias ErrorDisplayMessage = (title: String, message: String)
+typealias ErrorDisplayMessage = (title: String, text: String)
 
 public enum NetworkingError: Error {
     
@@ -19,13 +19,39 @@ public enum NetworkingError: Error {
     func displayMessage() -> ErrorDisplayMessage {
         switch self {
         case .generic:
-            return (title: "Oops...", message: "Something went wrong.")
+            return (title: "Oops...", text: "Something went wrong.")
         case .noInternetConnection:
-            return (title: "No internet connection", message: "Please check your internet connection and try again.")
+            return (title: "Oops...", text: "The Internet connection appears to be offline.")
         case .invalidRequestURL:
-            return (title: "Oops...", message: "Something went wrong.")
+            return (title: "Oops...", text: "Something went wrong.")
         case .invalidResponseData:
-            return (title: "Oops...", message: "Something went wrong.")
+            return (title: "Oops...", text: "We couldn't find any places nearby.")
         }
+    }
+}
+
+extension Error {
+    
+    func toNetworkingError() -> NetworkingError {
+        let errorCode = (self as NSError).code
+
+        if errorCode == URLError.notConnectedToInternet.rawValue {
+            return .noInternetConnection
+        } else {
+            return .generic
+        }
+        // More Error types heere
+    }
+}
+
+extension NSError {
+    
+    func toNetworkingError() -> NetworkingError {
+        if self.code == URLError.notConnectedToInternet.rawValue {
+            return .noInternetConnection
+        } else {
+            return .generic
+        }
+        // More Error types heere
     }
 }

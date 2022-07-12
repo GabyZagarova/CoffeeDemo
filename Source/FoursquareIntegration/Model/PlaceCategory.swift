@@ -10,7 +10,7 @@ import Foundation
 struct PlaceCategory: Codable {
     
     var id: Int64
-    var name: String?
+    var name: String
 }
 
 extension PlaceCategory {
@@ -70,4 +70,13 @@ extension PlaceCategory {
             return ""
         }
     }
+}
+
+extension PlaceCategory: Equatable {
+    
+    static func == (lhs: PlaceCategory, rhs: PlaceCategory) -> Bool {
+        return lhs.id == rhs.id &&
+        lhs.name == rhs.name
+    }
+
 }
