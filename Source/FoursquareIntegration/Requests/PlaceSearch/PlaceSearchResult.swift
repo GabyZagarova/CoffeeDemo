@@ -8,11 +8,14 @@
 import Foundation
 import SwiftUI
 
-struct PlaceSearchResult: Decodable {
+struct PlaceSearchResult {
     
     var places: [Place]
     var message: String?
+}
 
+extension PlaceSearchResult: Decodable {
+    
     enum CodingKeys: String, CodingKey {
         case places = "results"
         case message  = "message"

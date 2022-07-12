@@ -11,7 +11,7 @@ import Foundation
 struct FoursquarePlacesLimit {
 
     private(set) var limitValue: Int = 0
-    private let FoursquarePlacesLimit = 50
+    let FoursquarePlacesLimit = 50
     
     var wrappedValue: Int {
         get {

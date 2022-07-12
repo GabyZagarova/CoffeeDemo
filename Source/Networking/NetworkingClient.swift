@@ -25,7 +25,7 @@ protocol NetworkingClient {
 extension NetworkingClient {
     
     func performRequest<D>(responseType: D.Type, request: NetworkingRequest) async throws -> NetworkingResponse<D> where D : Decodable {
-        let urlRequest = self.buildRequest(request: request)
+        let urlRequest = self.buildURLRequest(request: request)
         
         let (responseData, _) = try await session.data(for: urlRequest)
         
@@ -41,7 +41,7 @@ extension NetworkingClient {
         }
     }
     
-    fileprivate func buildRequest(request: NetworkingRequest) -> URLRequest {
+    func buildURLRequest(request: NetworkingRequest) -> URLRequest {
         
         var fullURL = networkConfiguration.baseURL.appendingPathComponent(request.path)
 

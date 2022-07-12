@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Place: Decodable, Identifiable {
+struct Place: Identifiable {
     
     let id = UUID()
     
@@ -22,18 +22,20 @@ struct Place: Decodable, Identifiable {
 
     /// Main place coordinates
     var mainGeocode: Coordinates
-    
-    /// Nested JSON object lits
-    enum GeocodeCodingKeys: String, CodingKey {
-        case mainGeocode = "main"
-    }
+}
+
+extension Place: Codable {
     
     enum CodingKeys: String, CodingKey {
         case fsqID = "fsq_id"
         case name
         case categories
-        case location
         case geocodes
+    }
+    
+    /// Nested JSON object lits
+    enum GeocodeCodingKeys: String, CodingKey {
+        case mainGeocode = "main"
     }
     
     init(from decoder: Decoder) throws {
@@ -46,6 +48,29 @@ struct Place: Decodable, Identifiable {
         let geocodesContainer = try container.nestedContainer(keyedBy: GeocodeCodingKeys.self, forKey: .geocodes)
         mainGeocode = try geocodesContainer.decode(Coordinates.self, forKey: .mainGeocode)
     }
+    
+    func encode(to encoder: Encoder) throws {
+        
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(fsqID, forKey: .fsqID)
+        try container.encode(name, forKey: .name)
+        try container.encode(categories, forKey: .categories)
+        
+        var nestedContainer = container.nestedContainer(keyedBy: GeocodeCodingKeys.self, forKey: .geocodes)
+        try nestedContainer.encode(mainGeocode, forKey: .mainGeocode)
+    }
+}
+
+extension Place: Equatable {
+    
+    static func == (lhs: Place, rhs: Place) -> Bool {
+        return lhs.fsqID == rhs.fsqID &&
+        lhs.name == rhs.name &&
+        lhs.mainGeocode.latitude == rhs.mainGeocode.latitude &&
+        lhs.mainGeocode.longitude == rhs.mainGeocode.longitude &&
+        lhs.categories == rhs.categories
+    }
+
 }
 
 extension Place {

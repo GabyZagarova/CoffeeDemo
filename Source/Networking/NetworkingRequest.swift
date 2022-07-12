@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+    
 protocol NetworkingRequest {
     
     var name: String { get }
